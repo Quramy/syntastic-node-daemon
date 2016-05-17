@@ -24,7 +24,6 @@ function! syntastic_node_daemon#plugin_dir()
   return s:plugin_dir
 endfunction
 
-" ### Server Process Management {{{
 " If not exsiting process of daemon, create it.
 function! syntastic_node_daemon#startServer()
   if s:P.state(s:snd) == 'existing'
@@ -54,11 +53,8 @@ function! syntastic_node_daemon#sendRequest(req)
   let [l:count, l:has_out] = [0, 0]
   while l:count < 30 && !l:has_out
     let [out, err, type] = s:P.read_wait(s:snd, 0.01, ['Content:\s\+'])
-    "echo "out ".out
-    "echo "type ".type
     if type ==# 'matched'
       let l:has_out = 1
-      "return out
       return [s:Json.decode(out), 0, '']
     else
       let l:count = l:count + 1
@@ -66,19 +62,6 @@ function! syntastic_node_daemon#sendRequest(req)
   endwhile
   return [{}, 1, 'timedout']
 endfunction
-
-function! syntastic_node_daemon#test()
-  call syntastic_node_daemon#stopServer()
-  call syntastic_node_daemon#startServer()
-  "echo syntastic_node_daemon#sendRequest({'command': 'ping'})
-  let result = syntastic_node_daemon#sendRequest({'command': 'check', 'checker': 'tslint', 'args': {
-        \ 'file': 'hoge.ts',
-        \ 'contents': 'interface ihoge { }'
-        \ }})
-  echo result[0].body[0]
-endfunction
-
-" ### Server Process Management }}}
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
