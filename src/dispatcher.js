@@ -19,7 +19,9 @@ export class Dispatcher {
       console.error('cannot find checker: ', checkerName);
       this._system.log('cannot find checker: ' + checkerName)
     }
-    return checkerFactory(option);
+    return checkerFactory({
+      basedir: this._system.basedir,
+    }, option);
   }
 
   lookupChecker(checkerName, option) {
@@ -32,12 +34,21 @@ export class Dispatcher {
   createResponse(body) {
     return {
       type: 'response',
+      success: true,
       body,
     };
   }
 
+  createError(msg) {
+    return {
+      type: 'error',
+      success: false,
+      message: msg,
+    };
+  }
+
   dispatch(command) {
-    let result;
+    let checker, result;
     this._system.log('input cmd: ' + command);
     if(command.command && command.command === 'ping') {
       this._system.write(this.createResponse({message: 'pong'}));
@@ -47,8 +58,13 @@ export class Dispatcher {
       switch(command.command) {
         case 'check': 
           this._system.log(command.args.contents)
-          result = this.lookupChecker(command.checker).check(command.args);
-          this._system.write(this.createResponse(result));
+          checker = this.lookupChecker(command.checker);
+          if (!checker.isEnabled) {
+            this._system.write(this.createError(`checker ${command.checker} is not available`));
+          }else{
+            result = checker.check(command.args);
+            this._system.write(this.createResponse(result));
+          }
           return;
         default:
           break;
@@ -56,7 +72,7 @@ export class Dispatcher {
     }else{
     }
 
-    this._system.write({type: 'error', message: 'unknown command: ' + command.command});
+    this._system.write(this.createError('unknown command: ' + command.command));
   }
 }
 

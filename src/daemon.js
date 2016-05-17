@@ -4,10 +4,11 @@ import { Dispatcher } from './dispatcher';
 
 export class StdioServer {
 
-  constructor() {
-    this._dispatcher = new Dispatcher(this);
+  constructor({basedir}) {
     this._enableLog = !!process.env['SYNTASTIC_NODE_DAEMON_LOG'];
-    this._logFilePath = path.join(process.cwd(), 'snd-debug.log'); 
+    this.basedir = basedir || process.cwd();
+    this._logFilePath = path.join(this.basedir, 'snd-debug.log'); 
+    this._dispatcher = new Dispatcher(this);
   }
 
   createCommand(msg) {
@@ -64,9 +65,16 @@ export class StdioServer {
 
     if(this._enableLog) {
       fs.writeFileSync(this._logFilePath, 'listening on STDIN...\n', 'utf-8');
+      this.log('server info:');
+      this.log('  base dir: ' + this.basedir);
     }
   }
 }
 
-const server = new StdioServer();
+const argv = require('yargs')
+  .alias('b', 'basedir')
+  .argv
+;
+const server = new StdioServer({basedir: argv.b});
+
 server.start();

@@ -4,3 +4,4 @@ syntastic_node_daemon
 ProcessManager
 Web.JSON
 System.Filepath
+Prelude

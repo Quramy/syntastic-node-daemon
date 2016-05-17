@@ -14,6 +14,7 @@ function! syntastic_node_daemon#vital()
 endfunction
 
 let s:P = s:V.import('ProcessManager')
+let s:Prelude = s:V.import('Prelude')
 let s:Path = s:V.import('System.Filepath')
 let s:Json = s:V.import('Web.JSON')
 let s:plugin_dir = s:Path.join(expand('<sfile>:p:h'), '../')
@@ -30,7 +31,8 @@ function! syntastic_node_daemon#startServer()
     return 'existing'
   endif
   let l:cmd = 'node '.s:Path.join(s:plugin_dir, 'lib/daemon.js')
-  let l:is_new = s:P.touch(s:snd, l:cmd)
+  let l:args = ' --basedir "'.s:Prelude.path2project_directory(expand('%')).'"'
+  let l:is_new = s:P.touch(s:snd, l:cmd.l:args)
   return l:is_new
 endfunction
 

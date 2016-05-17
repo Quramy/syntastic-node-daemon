@@ -1,26 +1,35 @@
-import Linter from 'tslint';
-import { findConfiguration } from "tslint/lib/configuration";
+import { resolve } from '../resolve';
 
 class TslintChecker {
-  constructor(option) {
+  constructor({basedir}, option) {
+    this._basedir = basedir;
     this.init(option);
   }
 
   init(option) {
+    const tslintPath = resolve('tslint', {basedir: this._basedir});
+    const tslintConfigrationPath = resolve('tslint/lib/configuration', {basedir: this._basedir});
+    if(!tslintPath || !tslintConfigrationPath) {
+      this.isEnabled = false;
+      return;
+    }
+    this.isEnabled = true;
+    this._linterClazz = require(tslintPath);
+    const findConfiguration = require(tslintConfigrationPath).findConfiguration;
+
     this._option = Object.assign({
       formatter: 'json',
-      configuration: findConfiguration(null, process.cwd()), // TODO
+      configuration: findConfiguration(null, this._basedir),
       rulesDirectory: []
     }, option);
   }
 
   check({file, contents}) {
-    console.error(file, contents);
-    const ll = new Linter(file, contents, this._option);
+    const ll = new this._linterClazz(file, contents, this._option);
     return JSON.parse(ll.lint().output);
   }
 }
 
-module.exports = function(option) {
-  return new TslintChecker(option);
+module.exports = function({basedir}, option) {
+  return new TslintChecker({basedir}, option);
 };

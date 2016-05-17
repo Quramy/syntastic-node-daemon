@@ -14,12 +14,12 @@ let s:save_cpo = &cpo
 set cpo&vim
 " Preprocessing }}}
 
+let s:is_available = 1
 function! SyntaxCheckers_typescript_tslintd_IsAvailable() dict abort
-  return 1
+  return s:is_available
 endfunction
 
 function! SyntaxCheckers_typescript_tslintd_GetLocList() dict abort
-  "let quickfix_list = tslintd#createFixlist()
   call syntastic_node_daemon#startServer()
   let req = {
         \ 'command': 'check',
@@ -30,7 +30,8 @@ function! SyntaxCheckers_typescript_tslintd_GetLocList() dict abort
         \   }
         \ }
   let [result, has_error, reason] = syntastic_node_daemon#sendRequest(req)
-  if has_error 
+  if has_error || !has_key(result, 'body')
+    let s:is_available = 0
     return []
   endif
   let quickfix_list = []
