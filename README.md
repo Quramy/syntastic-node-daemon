@@ -22,6 +22,10 @@ npm i
 let g:syntastic_typescript_checkers = ['tslintd'] " instead of 'tslint' checker
 ```
 
+## Remarks
+
+The syntastic server's checker works only if you have installed lint(e.g. tslint) package locally. If you don't have, the server returns no syntax error.
+
 ### Available checkers
 
 * `tslintd`: [tslint](http://palantir.github.io/tslint/)

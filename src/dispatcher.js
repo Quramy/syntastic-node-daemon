@@ -49,7 +49,6 @@ export class Dispatcher {
 
   dispatch(command) {
     let checker, result;
-    this._system.log('input cmd: ' + command);
     if(command.command && command.command === 'ping') {
       this._system.write(this.createResponse({message: 'pong'}));
       return;

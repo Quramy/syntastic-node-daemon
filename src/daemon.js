@@ -64,8 +64,8 @@ export class StdioServer {
     });
 
     if(this._enableLog) {
-      fs.writeFileSync(this._logFilePath, 'listening on STDIN...\n', 'utf-8');
-      this.log('server info:');
+      fs.writeFileSync(this._logFilePath, new Date() + ' listening on STDIN...\n', 'utf-8');
+      this.log('Server info:');
       this.log('  base dir: ' + this.basedir);
     }
   }
