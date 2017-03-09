@@ -49,7 +49,7 @@ export class StdioServer {
         if (cmd) {
           this._dispatcher.dispatch(cmd);
         } else {
-          this.write({type: 'error', message: 'request must bu a JSON', request: chunk});
+          this.write({ type: 'error', message: 'request must bu a JSON', request: chunk });
         }
       });
     });
@@ -75,6 +75,6 @@ const argv = require('yargs')
   .alias('b', 'basedir')
   .argv
 ;
-const server = new StdioServer({basedir: argv.b});
+const server = new StdioServer({ basedir: argv.b });
 
 server.start();
