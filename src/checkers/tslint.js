@@ -15,18 +15,19 @@ class TslintChecker {
     }
     this.isEnabled = true;
     const { findConfiguration } = require(tslintConfigrationPath);
-    var { Linter } = require(tslintPath);
+    const { Linter } = require(tslintPath);
     this._configuration = findConfiguration(null, this._basedir).results;
     this._option = Object.assign({
       formatter: 'json',
       fix: false,
     }, option);
-    this._linter = new Linter(this._option);
+    this._factory = () => new Linter(this._option);
   }
 
   check({ file, contents }) {
-    this._linter.lint(file, contents, this._configuration);
-    return JSON.parse(this._linter.getResult().output);
+    const linter = this._factory();
+    linter.lint(file, contents, this._configuration);
+    return JSON.parse(linter.getResult().output);
   }
 }
 
