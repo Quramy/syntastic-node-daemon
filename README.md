@@ -20,6 +20,7 @@ npm i
 
 ```vim
 let g:syntastic_typescript_checkers = ['tslintd'] " instead of 'tslint' checker
+let g:syntastic_css_checkers = ['stylelintd']
 ```
 
 ## Remarks
@@ -29,3 +30,4 @@ The syntastic server's checker works only if you have installed lint(e.g. tslint
 ### Available checkers
 
 * `tslintd`: [tslint](http://palantir.github.io/tslint/)
+* `stylelint`: [stylelint](https://stylelint.io/)
