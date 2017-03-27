@@ -20,8 +20,8 @@ class StylelintChecker {
         const output = JSON.parse(data.output);
         return output[0].warnings.map(w => ({
           failure: w.text,
-          startPosition: { line: w.line - 1,  position: w.column - 1, character: w.column - 1},
-          endPosition: { line: w.line - 1,  position: w.column - 1, character: w.column - 1},
+          startPosition: { line: w.line - 1,  position: w.column - 1, character: w.column - 1 },
+          endPosition: { line: w.line - 1,  position: w.column - 1, character: w.column - 1 },
         }));
       } else {
         return [];
