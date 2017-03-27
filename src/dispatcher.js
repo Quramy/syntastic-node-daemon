@@ -60,9 +60,15 @@ export class Dispatcher {
           checker = this.lookupChecker(command.checker);
           if (!checker.isEnabled) {
             this._system.write(this.createError(`checker ${command.checker} is not available`));
-          }else{
+          } else {
+            let p;
             result = checker.check(command.args);
-            this._system.write(this.createResponse(result));
+            if (!result.then) {
+              p = Promise.resolve(result);
+            } else {
+              p = result;
+            }
+            p.then(r => this._system.write(this.createResponse(r)));
           }
           return;
         default:
