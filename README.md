@@ -1,4 +1,6 @@
 # syntatstic node daemon
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Quramy/syntastic-node-daemon.svg)](https://greenkeeper.io/)
 Provides fast [Syntastic](https://github.com/scrooloose/syntastic) checkers.
 
 This plugin includes the following components:
